@@ -1,6 +1,7 @@
 package bls
 
 import (
+	"errors"
 	bls12381 "github.com/kilic/bls12-381"
 )
 
@@ -10,10 +11,12 @@ var (
 
 type AugSchemeMPL struct{}
 
+// Sign 签名
 func (asm *AugSchemeMPL) Sign(sk PrivateKey, message []byte) []byte {
 	return bls12381.NewG2().ToCompressed(coreSignMpl(sk, message, AugSchemeDst))
 }
 
+// Verify 验证
 func (asm *AugSchemeMPL) Verify(pk PublicKey, message []byte, sig []byte) bool {
 	return coreVerifyMpl(
 		pk,
@@ -23,12 +26,14 @@ func (asm *AugSchemeMPL) Verify(pk PublicKey, message []byte, sig []byte) bool {
 	)
 }
 
-func (asm *AugSchemeMPL) Aggregate() {
-
+// Aggregate 多签
+func (asm *AugSchemeMPL) Aggregate(signatures ...[]byte) ([]byte, error) {
+	return coreAggregateMpl(signatures...)
 }
 
-func (asm *AugSchemeMPL) AggregateVerify() {
-
+// AggregateVerify 多签验证
+func (asm *AugSchemeMPL) AggregateVerify(pks [][]byte, messages [][]byte, sig []byte) bool {
+	return coreAggregateVerify(pks, messages, sig, AugSchemeDst)
 }
 
 func coreSignMpl(sk PrivateKey, message, dst []byte) *bls12381.PointG2 {
@@ -63,6 +68,56 @@ func coreVerifyMpl(pk PublicKey, message []byte, sig, dst []byte) bool {
 	return engine.Check()
 }
 
-func coreAggregate() {
+func coreAggregateMpl(signatures ...[]byte) ([]byte, error) {
+	if len(signatures) < 1 {
+		return nil, errors.New("Must aggregate at least 1 signature ")
+	}
 
+	newG2 := bls12381.NewG2()
+	aggSig := newG2.New()
+
+	for _, sig := range signatures {
+		g2, err := bls12381.NewG2().FromCompressed(sig)
+		if err != nil {
+			return nil, err
+		}
+		aggSig = bls12381.NewG2().Add(newG2.New(), aggSig, g2)
+	}
+
+	return bls12381.NewG2().ToCompressed(aggSig), nil
+}
+
+func coreAggregateVerify(pks, messages [][]byte, sig, dst []byte) bool {
+	pksLen := len(pks)
+
+	if pksLen != len(messages) && pksLen < 1 {
+		return false
+	}
+
+	g1Neg := new(bls12381.PointG1)
+	g1Neg = bls12381.NewG1().Neg(g1Neg, G1Generator())
+
+	signature, err := bls12381.NewG2().FromCompressed(sig)
+	if err != nil {
+		return false
+	}
+
+	engine := bls12381.NewEngine()
+	engine.AddPair(g1Neg, signature)
+
+	for index, pk := range pks {
+		p, err := bls12381.NewG1().FromCompressed(pk)
+		if err != nil {
+			return false
+		}
+
+		g2Map := bls12381.NewG2()
+		q, err := g2Map.HashToCurve(append(pks[index], messages[index]...), dst)
+		if err != nil {
+			return false
+		}
+
+		engine.AddPair(p, q)
+	}
+	return engine.Check()
 }
