@@ -1,7 +1,6 @@
 package bls
 
 import (
-	"fmt"
 	bls12381 "github.com/kilic/bls12-381"
 )
 
@@ -50,8 +49,6 @@ func coreVerifyMpl(pk PublicKey, message []byte, sig, dst []byte) bool {
 	// 校验
 	signature, err := bls12381.NewG2().FromCompressed(sig)
 	if err != nil {
-		fmt.Println(len(sig))
-		fmt.Println(err)
 		return false
 	}
 

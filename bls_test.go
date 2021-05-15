@@ -8,8 +8,8 @@ import (
 
 var (
 	testSeed, _ = hex.DecodeString("" +
-	"76f3109f1a2142fdefcc6a666d3f321b37ce9690d28103ccbb1a654af2c0a469" +
-	"00aac14fab9f0ce4851cf1a1fe8beaf7d34c9ceb008849d5b7e9bc78ef0ec649")
+		"76f3109f1a2142fdefcc6a666d3f321b37ce9690d28103ccbb1a654af2c0a469" +
+		"00aac14fab9f0ce4851cf1a1fe8beaf7d34c9ceb008849d5b7e9bc78ef0ec649")
 
 	testMnemonic = "" +
 		"media spike luggage ramp famous gentle social wolf sing raven student involve " +
@@ -18,6 +18,10 @@ var (
 
 /*
 Fingerprint: 563730848
+
+master private key: 6971ac2114952dfa1e4c8e8053308aa115bd75aa890a7d82a45718f334329191
+
+master public key: b2d709611a67e5224cbe9010739b138356e88bbdc4b91a833a489213bab9ad39cfee9c93e0fc3c70a0c4a6b6c5ada8b5
 
 Farmer public key (m/12381/8444/0/0): b69b74794fa16c4569af42401615948094ad076795627d88f08e5f1626ec3e2dda47376db481dd3ecdf0585b960b80cf
 
@@ -31,11 +35,10 @@ func TestBls(t *testing.T) {
 
 	t.Log("sk compare:", bytes.Compare(masterSk.ToBytes(), masterSkWithMnemonic.ToBytes()))
 
-
 	masterPk := masterSk.GetPublicKey()
 
 	t.Log("masterSk:", hex.EncodeToString(masterSk.ToBytes()))
-	t.Log("masterSk:", hex.EncodeToString(masterPk.ToBytes()))
+	t.Log("masterPk:", hex.EncodeToString(masterPk.ToBytes()))
 	t.Log("fingerprint:", masterPk.FingerPrint())
 
 	t.Log("")
@@ -51,4 +54,14 @@ func TestBls(t *testing.T) {
 	poolPk := poolSk.GetPublicKey()
 	t.Log("poolSk:", hex.EncodeToString(poolSk.ToBytes()))
 	t.Log("poolPk:", hex.EncodeToString(poolPk.ToBytes()))
+}
+
+func TestKeyGen(t *testing.T) {
+	sk, err := KeyFromHexString("61f6ac6da2db443dbec5bab8d6c663dd34257490779b4161a6647fd0c024188e")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	key := sk.GetPublicKey()
+	t.Log("pk:", hex.EncodeToString(key.ToBytes())) // b2d709611a67e5224cbe9010739b138356e88bbdc4b91a833a489213bab9ad39cfee9c93e0fc3c70a0c4a6b6c5ada8b5
 }

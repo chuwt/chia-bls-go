@@ -5,8 +5,10 @@
 
 ## 主要功能
 - 生成私钥
-    - 根据助记词
-    - 根据seed
+  - 助记词
+  - seed
+  - hexString
+  - bytes
 - 签名
 - 验签
 - 多签(WIP)
