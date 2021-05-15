@@ -1,13 +1,20 @@
 package bls
 
 import (
+	"bytes"
 	"encoding/hex"
 	"testing"
 )
 
-var testSeed, _ = hex.DecodeString("" +
+var (
+	testSeed, _ = hex.DecodeString("" +
 	"76f3109f1a2142fdefcc6a666d3f321b37ce9690d28103ccbb1a654af2c0a469" +
 	"00aac14fab9f0ce4851cf1a1fe8beaf7d34c9ceb008849d5b7e9bc78ef0ec649")
+
+	testMnemonic = "" +
+		"media spike luggage ramp famous gentle social wolf sing raven student involve " +
+		"poverty team capital inspire lumber hat park nose effort still fatigue supply"
+)
 
 /*
 Fingerprint: 563730848
@@ -18,7 +25,13 @@ Pool public key (m/12381/8444/1/0): 8b417b4310ecb7fd68e8c39e0fa0e334edd3c8c93eca
 */
 
 func TestBls(t *testing.T) {
+
 	masterSk := KeyGen(testSeed)
+	masterSkWithMnemonic := KeyGenWithMnemonic(testMnemonic, "")
+
+	t.Log("sk compare:", bytes.Compare(masterSk.ToBytes(), masterSkWithMnemonic.ToBytes()))
+
+
 	masterPk := masterSk.GetPublicKey()
 
 	t.Log("masterSk:", hex.EncodeToString(masterSk.ToBytes()))
