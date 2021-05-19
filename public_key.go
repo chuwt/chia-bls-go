@@ -9,14 +9,20 @@ type PublicKey struct {
 	value *bls12381.PointG1
 }
 
-func (pk *PublicKey) FingerPrint() string {
+func (pk PublicKey) FingerPrint() string {
 	return new(big.Int).SetBytes(Hash256(bls12381.NewG1().ToCompressed(pk.value))[:4]).String()
 }
 
-func (pk *PublicKey) ToBytes() []byte {
+func (pk PublicKey) ToBytes() []byte {
 	return bls12381.NewG1().ToCompressed(pk.value)
 }
 
-func (pk *PublicKey) ToG1() *bls12381.PointG1 {
+func (pk PublicKey) ToG1() *bls12381.PointG1 {
 	return pk.value
+}
+
+func (pk PublicKey) Add(key PublicKey) PublicKey {
+	return PublicKey{
+		value: bls12381.NewG1().Add(bls12381.NewG1().New(), pk.value, key.ToG1()),
+	}
 }

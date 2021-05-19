@@ -65,3 +65,17 @@ func TestKeyGen(t *testing.T) {
 	key := sk.GetPublicKey()
 	t.Log("pk:", hex.EncodeToString(key.ToBytes())) // b2d709611a67e5224cbe9010739b138356e88bbdc4b91a833a489213bab9ad39cfee9c93e0fc3c70a0c4a6b6c5ada8b5
 }
+
+func TestPublicKeyAdd(t *testing.T) {
+	masterSk := KeyGen(testSeed)
+
+	farmerSk := masterSk.ToFarmerSk()
+	localSk := masterSk.ToLocalSk()
+
+	farmerPk := farmerSk.GetPublicKey()
+	localPk := localSk.GetPublicKey()
+
+	aggKey := farmerPk.Add(localPk)
+	// will be 8e0d77cc057663bb70d834acfa584117232f3ce0e1519a0b927bce626bdd7131a6896b02b8ad80a1dec3eddcbc1ec471
+	t.Log(hex.EncodeToString(aggKey.ToBytes()))
+}
