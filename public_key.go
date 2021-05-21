@@ -12,7 +12,7 @@ type PublicKey struct {
 func NewPublicKey(data []byte) (PublicKey, error) {
 	value, err := bls12381.NewG1().FromCompressed(data)
 	if err != nil {
-		return PublicKey{}, nil
+		return PublicKey{}, err
 	}
 	return PublicKey{
 		value: value,
