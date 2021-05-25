@@ -33,27 +33,27 @@ func TestBls(t *testing.T) {
 	masterSk := KeyGen(testSeed)
 	masterSkWithMnemonic := KeyGenWithMnemonic(testMnemonic, "")
 
-	t.Log("sk compare:", bytes.Compare(masterSk.ToBytes(), masterSkWithMnemonic.ToBytes()))
+	t.Log("sk compare:", bytes.Compare(masterSk.Bytes(), masterSkWithMnemonic.Bytes()))
 
 	masterPk := masterSk.GetPublicKey()
 
-	t.Log("masterSk:", hex.EncodeToString(masterSk.ToBytes()))
-	t.Log("masterPk:", hex.EncodeToString(masterPk.ToBytes()))
+	t.Log("masterSk:", hex.EncodeToString(masterSk.Bytes()))
+	t.Log("masterPk:", hex.EncodeToString(masterPk.Bytes()))
 	t.Log("fingerprint:", masterPk.FingerPrint())
 
 	t.Log("")
 
-	farmerSk := masterSk.ToFarmerSk()
+	farmerSk := masterSk.FarmerSk()
 	farmerPk := farmerSk.GetPublicKey()
-	t.Log("farmerSk:", hex.EncodeToString(farmerSk.ToBytes()))
-	t.Log("farmerPk:", hex.EncodeToString(farmerPk.ToBytes()))
+	t.Log("farmerSk:", hex.EncodeToString(farmerSk.Bytes()))
+	t.Log("farmerPk:", hex.EncodeToString(farmerPk.Bytes()))
 
 	t.Log("")
 
-	poolSk := masterSk.ToPoolSk()
+	poolSk := masterSk.PoolSk()
 	poolPk := poolSk.GetPublicKey()
-	t.Log("poolSk:", hex.EncodeToString(poolSk.ToBytes()))
-	t.Log("poolPk:", hex.EncodeToString(poolPk.ToBytes()))
+	t.Log("poolSk:", hex.EncodeToString(poolSk.Bytes()))
+	t.Log("poolPk:", hex.EncodeToString(poolPk.Bytes()))
 }
 
 func TestKeyGen(t *testing.T) {
@@ -63,19 +63,19 @@ func TestKeyGen(t *testing.T) {
 		return
 	}
 	key := sk.GetPublicKey()
-	t.Log("pk:", hex.EncodeToString(key.ToBytes())) // b2d709611a67e5224cbe9010739b138356e88bbdc4b91a833a489213bab9ad39cfee9c93e0fc3c70a0c4a6b6c5ada8b5
+	t.Log("pk:", hex.EncodeToString(key.Bytes())) // b2d709611a67e5224cbe9010739b138356e88bbdc4b91a833a489213bab9ad39cfee9c93e0fc3c70a0c4a6b6c5ada8b5
 }
 
 func TestPublicKeyAdd(t *testing.T) {
 	masterSk := KeyGen(testSeed)
 
-	farmerSk := masterSk.ToFarmerSk()
-	localSk := masterSk.ToLocalSk()
+	farmerSk := masterSk.FarmerSk()
+	localSk := masterSk.LocalSk()
 
 	farmerPk := farmerSk.GetPublicKey()
 	localPk := localSk.GetPublicKey()
 
 	aggKey := farmerPk.Add(localPk)
 	// will be 8e0d77cc057663bb70d834acfa584117232f3ce0e1519a0b927bce626bdd7131a6896b02b8ad80a1dec3eddcbc1ec471
-	t.Log(hex.EncodeToString(aggKey.ToBytes()))
+	t.Log(hex.EncodeToString(aggKey.Bytes()))
 }

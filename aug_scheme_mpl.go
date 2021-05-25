@@ -20,7 +20,7 @@ func (asm *AugSchemeMPL) Sign(sk PrivateKey, message []byte) []byte {
 func (asm *AugSchemeMPL) Verify(pk PublicKey, message []byte, sig []byte) bool {
 	return coreVerifyMpl(
 		pk,
-		append(pk.ToBytes(), message...),
+		append(pk.Bytes(), message...),
 		sig,
 		AugSchemeDst,
 	)
@@ -41,9 +41,9 @@ func coreSignMpl(sk PrivateKey, message, dst []byte) *bls12381.PointG2 {
 
 	g2Map := bls12381.NewG2()
 
-	q, _ := g2Map.HashToCurve(append(pk.ToBytes(), message...), dst)
+	q, _ := g2Map.HashToCurve(append(pk.Bytes(), message...), dst)
 
-	return g2Map.MulScalar(g2Map.New(), q, bls12381.NewFr().FromBytes(sk.ToBytes()))
+	return g2Map.MulScalar(g2Map.New(), q, bls12381.NewFr().FromBytes(sk.Bytes()))
 }
 
 func coreVerifyMpl(pk PublicKey, message []byte, sig, dst []byte) bool {
@@ -62,7 +62,7 @@ func coreVerifyMpl(pk PublicKey, message []byte, sig, dst []byte) bool {
 	g1Neg := new(bls12381.PointG1)
 	g1Neg = bls12381.NewG1().Neg(g1Neg, G1Generator())
 
-	engine = engine.AddPair(pk.ToG1(), q)
+	engine = engine.AddPair(pk.G1(), q)
 	engine = engine.AddPair(g1Neg, signature)
 
 	return engine.Check()

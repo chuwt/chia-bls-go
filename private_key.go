@@ -16,22 +16,22 @@ func (pk PrivateKey) GetPublicKey() PublicKey {
 	}
 }
 
-func (pk PrivateKey) ToBytes() []byte {
+func (pk PrivateKey) Bytes() []byte {
 	return pk.value.Bytes()
 }
 
-func (pk PrivateKey) ToFarmerSk() PrivateKey {
+func (pk PrivateKey) FarmerSk() PrivateKey {
 	return derivePath(pk, []int{12381, 8444, 0, 0})
 }
 
-func (pk PrivateKey) ToPoolSk() PrivateKey {
+func (pk PrivateKey) PoolSk() PrivateKey {
 	return derivePath(pk, []int{12381, 8444, 1, 0})
 }
 
-func (pk PrivateKey) ToWalletSk() PrivateKey {
-	return derivePath(pk, []int{12381, 8444, 2, 0})
+func (pk PrivateKey) WalletSk(index int) PrivateKey {
+	return derivePath(pk, []int{12381, 8444, 2, index})
 }
 
-func (pk PrivateKey) ToLocalSk() PrivateKey {
+func (pk PrivateKey) LocalSk() PrivateKey {
 	return derivePath(pk, []int{12381, 8444, 3, 0})
 }

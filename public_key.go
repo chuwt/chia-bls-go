@@ -23,17 +23,17 @@ func (pk PublicKey) FingerPrint() string {
 	return new(big.Int).SetBytes(Hash256(bls12381.NewG1().ToCompressed(pk.value))[:4]).String()
 }
 
-func (pk PublicKey) ToBytes() []byte {
+func (pk PublicKey) Bytes() []byte {
 	return bls12381.NewG1().ToCompressed(pk.value)
 }
 
-func (pk PublicKey) ToG1() *bls12381.PointG1 {
+func (pk PublicKey) G1() *bls12381.PointG1 {
 	return pk.value
 }
 
 func (pk PublicKey) Add(key PublicKey) PublicKey {
 	g1 := bls12381.NewG1()
 	return PublicKey{
-		value: g1.Add(g1.New(), pk.value, key.ToG1()),
+		value: g1.Add(g1.New(), pk.value, key.G1()),
 	}
 }

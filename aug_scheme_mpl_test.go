@@ -21,10 +21,10 @@ func TestAggregate(t *testing.T) {
 
 	masterSk := KeyGen(testSeed)
 
-	farmerSk := masterSk.ToFarmerSk()
+	farmerSk := masterSk.FarmerSk()
 	farmerPk := farmerSk.GetPublicKey()
 
-	poolSk := masterSk.ToPoolSk()
+	poolSk := masterSk.PoolSk()
 	poolPk := poolSk.GetPublicKey()
 
 	// 签名
@@ -42,8 +42,8 @@ func TestAggregate(t *testing.T) {
 	// 多签验证
 	t.Log("AggregateVerify:", asm.AggregateVerify(
 		[][]byte{
-			farmerPk.ToBytes(),
-			poolPk.ToBytes(),
+			farmerPk.Bytes(),
+			poolPk.Bytes(),
 		},
 		[][]byte{
 			[]byte("chuwt1"),
