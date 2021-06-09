@@ -14,6 +14,8 @@ var (
 	testMnemonic = "" +
 		"media spike luggage ramp famous gentle social wolf sing raven student involve " +
 		"poverty team capital inspire lumber hat park nose effort still fatigue supply"
+
+	testHexString = "6971ac2114952dfa1e4c8e8053308aa115bd75aa890a7d82a45718f334329191"
 )
 
 /*
@@ -27,6 +29,28 @@ Farmer public key (m/12381/8444/0/0): b69b74794fa16c4569af42401615948094ad076795
 
 Pool public key (m/12381/8444/1/0): 8b417b4310ecb7fd68e8c39e0fa0e334edd3c8c93eca9985a3f398846f9429142993196416199436718f3ec26609e618
 */
+
+func TestSyntheticSk(t *testing.T) {
+	// 需要注意公钥对应的index是0，目前暂时只支持0，后面可以添加检索
+	masterSk, _ := KeyFromHexString(testHexString)
+
+	walletSK := masterSk.WalletSk(0)
+	t.Log(hex.EncodeToString(walletSK.Bytes()))
+
+	// key is a wallet sk, not master sk
+	syntheticSk := walletSK.SyntheticSk(Hidden)
+
+	t.Log(hex.EncodeToString(syntheticSk.Bytes()))
+}
+
+func TestWalletIndex(t *testing.T) {
+	masterSk, _ := KeyFromHexString(testHexString)
+	for i := 0; i < 10; i++ {
+		walletSk := masterSk.WalletSk(i)
+		walletPk := walletSk.GetPublicKey()
+		t.Log(i, hex.EncodeToString(walletPk.Bytes()), hex.EncodeToString(walletSk.Bytes()))
+	}
+}
 
 func TestBls(t *testing.T) {
 
@@ -57,7 +81,7 @@ func TestBls(t *testing.T) {
 }
 
 func TestKeyGen(t *testing.T) {
-	sk, err := KeyFromHexString("61f6ac6da2db443dbec5bab8d6c663dd34257490779b4161a6647fd0c024188e")
+	sk, err := KeyFromHexString(testHexString)
 	if err != nil {
 		t.Error(err)
 		return
