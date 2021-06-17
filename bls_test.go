@@ -35,12 +35,12 @@ func TestSyntheticSk(t *testing.T) {
 	masterSk, _ := KeyFromHexString(testHexString)
 
 	walletSK := masterSk.WalletSk(0)
-	t.Log(hex.EncodeToString(walletSK.Bytes()))
+	t.Log(walletSK.Hex())
 
 	// key is a wallet sk, not master sk
 	syntheticSk := walletSK.SyntheticSk(Hidden)
 
-	t.Log(hex.EncodeToString(syntheticSk.Bytes()))
+	t.Log(syntheticSk.Hex())
 }
 
 func TestWalletIndex(t *testing.T) {
@@ -48,7 +48,7 @@ func TestWalletIndex(t *testing.T) {
 	for i := 0; i < 10; i++ {
 		walletSk := masterSk.WalletSk(i)
 		walletPk := walletSk.GetPublicKey()
-		t.Log(i, hex.EncodeToString(walletPk.Bytes()), hex.EncodeToString(walletSk.Bytes()))
+		t.Log(i, walletPk.Hex(), walletSk.Hex())
 	}
 }
 
@@ -61,23 +61,23 @@ func TestBls(t *testing.T) {
 
 	masterPk := masterSk.GetPublicKey()
 
-	t.Log("masterSk:", hex.EncodeToString(masterSk.Bytes()))
-	t.Log("masterPk:", hex.EncodeToString(masterPk.Bytes()))
+	t.Log("masterSk:", masterSk.Hex())
+	t.Log("masterPk:", masterPk.Hex())
 	t.Log("fingerprint:", masterPk.FingerPrint())
 
 	t.Log("")
 
 	farmerSk := masterSk.FarmerSk()
 	farmerPk := farmerSk.GetPublicKey()
-	t.Log("farmerSk:", hex.EncodeToString(farmerSk.Bytes()))
-	t.Log("farmerPk:", hex.EncodeToString(farmerPk.Bytes()))
+	t.Log("farmerSk:", farmerSk.Hex())
+	t.Log("farmerPk:", farmerPk.Hex())
 
 	t.Log("")
 
 	poolSk := masterSk.PoolSk()
 	poolPk := poolSk.GetPublicKey()
-	t.Log("poolSk:", hex.EncodeToString(poolSk.Bytes()))
-	t.Log("poolPk:", hex.EncodeToString(poolPk.Bytes()))
+	t.Log("poolSk:", poolSk.Hex())
+	t.Log("poolPk:", poolPk.Hex())
 }
 
 func TestKeyGen(t *testing.T) {
@@ -87,7 +87,7 @@ func TestKeyGen(t *testing.T) {
 		return
 	}
 	key := sk.GetPublicKey()
-	t.Log("pk:", hex.EncodeToString(key.Bytes())) // b2d709611a67e5224cbe9010739b138356e88bbdc4b91a833a489213bab9ad39cfee9c93e0fc3c70a0c4a6b6c5ada8b5
+	t.Log("pk:", key.Hex()) // b2d709611a67e5224cbe9010739b138356e88bbdc4b91a833a489213bab9ad39cfee9c93e0fc3c70a0c4a6b6c5ada8b5
 }
 
 func TestPublicKeyAdd(t *testing.T) {
@@ -101,5 +101,5 @@ func TestPublicKeyAdd(t *testing.T) {
 
 	aggKey := farmerPk.Add(localPk)
 	// will be 8e0d77cc057663bb70d834acfa584117232f3ce0e1519a0b927bce626bdd7131a6896b02b8ad80a1dec3eddcbc1ec471
-	t.Log(hex.EncodeToString(aggKey.Bytes()))
+	t.Log(aggKey.Hex())
 }
