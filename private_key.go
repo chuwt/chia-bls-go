@@ -1,6 +1,7 @@
 package bls
 
 import (
+	"encoding/hex"
 	bls12381 "github.com/kilic/bls12-381"
 	"math/big"
 )
@@ -28,6 +29,10 @@ func (key PrivateKey) GetPublicKey() PublicKey {
 
 func (key PrivateKey) Bytes() []byte {
 	return key.value.Bytes()
+}
+
+func (key PrivateKey) Hex() string {
+	return "0x" + hex.EncodeToString(key.Bytes())
 }
 
 func (key PrivateKey) FarmerSk() PrivateKey {

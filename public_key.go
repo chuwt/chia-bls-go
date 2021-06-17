@@ -1,6 +1,7 @@
 package bls
 
 import (
+	"encoding/hex"
 	bls12381 "github.com/kilic/bls12-381"
 	"math/big"
 )
@@ -25,6 +26,10 @@ func (key PublicKey) FingerPrint() string {
 
 func (key PublicKey) Bytes() []byte {
 	return bls12381.NewG1().ToCompressed(key.value)
+}
+
+func (key PublicKey) Hex() string {
+	return "0x" + hex.EncodeToString(key.Bytes())
 }
 
 func (key PublicKey) G1() *bls12381.PointG1 {
