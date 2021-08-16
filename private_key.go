@@ -20,6 +20,7 @@ type PrivateKey struct {
 	value *big.Int
 }
 
+// GetPublicKey 生成公钥
 func (key PrivateKey) GetPublicKey() PublicKey {
 	g1 := bls12381.NewG1()
 	return PublicKey{
@@ -27,30 +28,37 @@ func (key PrivateKey) GetPublicKey() PublicKey {
 	}
 }
 
+// Bytes 转成bytes
 func (key PrivateKey) Bytes() []byte {
 	return key.value.Bytes()
 }
 
+// Hex 转成hex string
 func (key PrivateKey) Hex() string {
 	return "0x" + hex.EncodeToString(key.Bytes())
 }
 
+// FarmerSk 派生farmerSk
 func (key PrivateKey) FarmerSk() PrivateKey {
 	return derivePath(key, []int{12381, 8444, 0, 0})
 }
 
+// PoolSk 派生PoolSk
 func (key PrivateKey) PoolSk() PrivateKey {
 	return derivePath(key, []int{12381, 8444, 1, 0})
 }
 
+// WalletSk 派生WalletSk
 func (key PrivateKey) WalletSk(index int) PrivateKey {
 	return derivePath(key, []int{12381, 8444, 2, index})
 }
 
+// LocalSk 派生LocalSk
 func (key PrivateKey) LocalSk() PrivateKey {
 	return derivePath(key, []int{12381, 8444, 3, 0})
 }
 
+// SyntheticSk 生成SyntheticSk
 func (key PrivateKey) SyntheticSk(hiddenPuzzleHash []byte) PrivateKey {
 	secretExponent := new(big.Int).SetBytes(key.Bytes())
 	pk := key.GetPublicKey()

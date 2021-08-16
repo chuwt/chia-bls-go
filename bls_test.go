@@ -99,7 +99,8 @@ func TestPublicKeyAdd(t *testing.T) {
 	farmerPk := farmerSk.GetPublicKey()
 	localPk := localSk.GetPublicKey()
 
-	aggKey := farmerPk.Add(localPk)
+	aggKey := farmerPk.
+		Add(localPk)
 	// will be 8e0d77cc057663bb70d834acfa584117232f3ce0e1519a0b927bce626bdd7131a6896b02b8ad80a1dec3eddcbc1ec471
 	t.Log(aggKey.Hex())
 }
