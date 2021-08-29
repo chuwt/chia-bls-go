@@ -98,3 +98,8 @@ func (asm *AugSchemeMPL) Aggregate(signatures ...[]byte) ([]byte, error)
 // 公钥数组，原始信息数组，多签返回的数据
 func (asm *AugSchemeMPL) AggregateVerify(pks [][]byte, messages [][]byte, sig []byte) bool
 ```
+5. 前置公钥签名
+```
+// 前置公钥签名
+SignWithPrependPK(sk PrivateKey, prependPK PublicKey, message []byte)
+```

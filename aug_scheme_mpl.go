@@ -13,11 +13,12 @@ type AugSchemeMPL struct{}
 
 // Sign 签名
 func (asm *AugSchemeMPL) Sign(sk PrivateKey, message []byte) []byte {
-	return bls12381.NewG2().ToCompressed(coreSignMpl(sk, nil, message, AugSchemeDst))
+	return bls12381.NewG2().ToCompressed(coreSignMpl(sk, sk.GetPublicKey(), message, AugSchemeDst))
 }
 
+// SignWithPrependPK 前置pubKey签名
 func (asm *AugSchemeMPL) SignWithPrependPK(sk PrivateKey, prependPK PublicKey, message []byte) []byte {
-	return bls12381.NewG2().ToCompressed(coreSignMpl(sk, &prependPK, message, AugSchemeDst))
+	return bls12381.NewG2().ToCompressed(coreSignMpl(sk, prependPK, message, AugSchemeDst))
 }
 
 // Verify 验证
@@ -40,12 +41,7 @@ func (asm *AugSchemeMPL) AggregateVerify(pks [][]byte, messages [][]byte, sig []
 	return coreAggregateVerify(pks, messages, sig, AugSchemeDst)
 }
 
-func coreSignMpl(sk PrivateKey, prependPK *PublicKey, message, dst []byte) *bls12381.PointG2 {
-	pk := sk.GetPublicKey()
-	if prependPK != nil {
-		pk = *prependPK
-	}
-
+func coreSignMpl(sk PrivateKey, pk PublicKey, message, dst []byte) *bls12381.PointG2 {
 	g2Map := bls12381.NewG2()
 
 	q, _ := g2Map.HashToCurve(append(pk.Bytes(), message...), dst)
