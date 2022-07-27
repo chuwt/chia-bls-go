@@ -1,4 +1,4 @@
-module github.com/chuwt/chia-bls-go
+module github.com/stablyio/chia-bls-go
 
 go 1.16
 
