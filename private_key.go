@@ -2,8 +2,9 @@ package bls
 
 import (
 	"encoding/hex"
-	bls12381 "github.com/kilic/bls12-381"
 	"math/big"
+
+	bls12381 "github.com/kilic/bls12-381"
 )
 
 var Hidden = []byte{
@@ -15,6 +16,8 @@ var GroupOrder = new(big.Int).SetBytes([]byte{
 	115, 237, 167, 83, 41, 157, 125, 72, 51, 57, 216, 8, 9, 161, 216, 5,
 	83, 189, 164, 2, 255, 254, 91, 254, 255, 255, 255, 255, 0, 0, 0, 1,
 })
+
+const PrivateKeySize = 32
 
 type PrivateKey struct {
 	value *big.Int
@@ -30,7 +33,9 @@ func (key PrivateKey) GetPublicKey() PublicKey {
 
 // Bytes 转成bytes
 func (key PrivateKey) Bytes() []byte {
-	return key.value.Bytes()
+	output := make([]byte, PrivateKeySize)
+	new(big.Int).SetBytes(key.value.Bytes()).FillBytes(output)
+	return output
 }
 
 // Hex 转成hex string

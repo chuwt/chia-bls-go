@@ -4,6 +4,8 @@ import (
 	"crypto/sha256"
 	"encoding/binary"
 	"encoding/hex"
+	"math/big"
+
 	bls12381 "github.com/kilic/bls12-381"
 	"golang.org/x/crypto/hkdf"
 )
@@ -68,4 +70,28 @@ func DeriveChildSk(parentSk PrivateKey, index int) PrivateKey {
 func Hash256(m []byte) []byte {
 	hash := sha256.Sum256(m)
 	return hash[:]
+}
+
+// Ref: https://github.com/Chia-Network/bls-signatures/blob/53243db501e1e9f5d031970da728efb1873f6c81/python-impl/hd_keys.py#L49
+func DeriveChildSkUnhardened(parentSk PrivateKey, index uint32) PrivateKey {
+	salt := make([]byte, 4)
+	binary.BigEndian.PutUint32(salt, index)
+
+	// h = hash256(bytes(parent_sk.get_g1()) + index.to_bytes(4, "big"))
+	hash := Hash256(append(parentSk.GetPublicKey().Bytes(), salt...))
+
+	// bls.PrivateKey.aggregate([PrivateKey.from_bytes(h), parent_sk])
+	sum := new(big.Int).Add(new(big.Int).SetBytes(hash), new(big.Int).SetBytes(parentSk.Bytes()))
+	bytes := new(big.Int).Mod(sum, bls12381.NewG1().Q()).Bytes()
+
+	return KeyFromBytes(bytes)
+}
+
+// To make keys more secure, choose path len value of at least 4
+// ex: []int{44, 8444, 2, varyingIndex}
+func DerivePathUnhardened(sk PrivateKey, path []uint32) PrivateKey {
+	for _, index := range path {
+		sk = DeriveChildSkUnhardened(sk, index)
+	}
+	return sk
 }
