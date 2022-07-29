@@ -14,7 +14,7 @@
 
 ## 安装说明
 ```
-go get github.com/stablyio/chia-bls-go
+go get github.com/chuwt/chia-bls-go
 ```
 
 ## 使用说明
