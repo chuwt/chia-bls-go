@@ -34,7 +34,7 @@ func (key PrivateKey) GetPublicKey() PublicKey {
 // Bytes 转成bytes
 func (key PrivateKey) Bytes() []byte {
 	output := make([]byte, PrivateKeySize)
-	new(big.Int).SetBytes(key.value.Bytes()).FillBytes(output)
+	key.value.FillBytes(output)
 	return output
 }
 

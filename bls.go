@@ -3,10 +3,11 @@ package bls
 import (
 	"crypto/sha512"
 	"encoding/hex"
-	bls12381 "github.com/kilic/bls12-381"
-	"golang.org/x/crypto/pbkdf2"
 	"math/big"
 	"strings"
+
+	bls12381 "github.com/kilic/bls12-381"
+	"golang.org/x/crypto/pbkdf2"
 )
 
 func KeyGen(seed []byte) PrivateKey {
@@ -23,9 +24,7 @@ func KeyFromBytes(keyBytes []byte) PrivateKey {
 }
 
 func KeyFromHexString(key string) (PrivateKey, error) {
-	if strings.HasPrefix(key, "0x") {
-		key = key[2:]
-	}
+	key = strings.TrimPrefix(key, "0x")
 	keyBytes, err := hex.DecodeString(key)
 	if err != nil {
 		return PrivateKey{}, err
