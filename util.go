@@ -34,7 +34,8 @@ func ikmToLamportSk(ikm, salt []byte) []byte {
 func parentSkToLamportPk(parentSk PrivateKey, index int) []byte {
 	salt := make([]byte, 4)
 	binary.BigEndian.PutUint32(salt, uint32(index))
-	ikm := parentSk.value.Bytes()
+	ikm := make([]byte, 32)
+	parentSk.value.FillBytes(ikm)
 	notIkm := make([]byte, len(ikm))
 	for i, e := range ikm {
 		notIkm[i] = e ^ 0xFF

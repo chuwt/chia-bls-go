@@ -104,3 +104,14 @@ func TestPublicKeyAdd(t *testing.T) {
 	// will be 8e0d77cc057663bb70d834acfa584117232f3ce0e1519a0b927bce626bdd7131a6896b02b8ad80a1dec3eddcbc1ec471
 	t.Log(aggKey.Hex())
 }
+
+// https://github.com/chuwt/chia-bls-go/issues/7
+func TestIssue7(t *testing.T) {
+	seed, _ := hex.DecodeString("16e68a14f0728688d62cf6996fc42aa1e1d0212d3d6c530335d90718f220aa42556d33b6a855afcbd1b3e5144a29030a1b0eed3ce325b9f8bf334051b3e2fc8d")
+	seedFarmerSK := "0x72819845fad63e8b42399abd86d7175fa6d7a984a992e743936858c1e6753b9b"
+
+	pk := KeyGen(seed)
+	farmerKey := pk.FarmerSk()
+
+	t.Log("farmer sk compare:", farmerKey.Hex() == seedFarmerSK)
+}

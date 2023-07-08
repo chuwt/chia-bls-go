@@ -1,6 +1,11 @@
 # chia-bls-go
 - go版本chia签名, 参考python-impl实现部分功能，并非bls的完全实现
 
+## Bug fix
+- Thanks for [**goomario**](https://github.com/goomario)'s [report](https://github.com/chuwt/chia-bls-go/issues/7),
+a bug was fixed!
+  - This bug was caused by the wrong use of `big.Int.Bytes()`, it should be replaced with `big.Int.FillBytes()`
+
 ## 主要功能
 - 生成私钥
   - 助记词
