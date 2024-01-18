@@ -93,7 +93,7 @@ func coreAggregateMpl(signatures ...[]byte) ([]byte, error) {
 func coreAggregateVerify(pks, messages [][]byte, sig, dst []byte) bool {
 	pksLen := len(pks)
 
-	if pksLen != len(messages) && pksLen < 1 {
+	if pksLen != len(messages) || pksLen == 0 {
 		return false
 	}
 
