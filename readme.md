@@ -2,7 +2,10 @@
 - go版本chia签名, 参考python-impl实现部分功能，并非bls的完全实现
 
 ## Bug fix
-- **2023/07/08** Thanks for [**goomario**](https://github.com/goomario)'s [report](https://github.com/chuwt/chia-bls-go/issues/7),
+- **2024/01/18** Thanks for the [code](https://github.com/chuwt/chia-bls-go/issues/8) from [**coolaj86**](https://github.com/coolaj86),
+a bug for checking length of pks on `coreAggregateVerify` was fixed!
+
+- **2023/07/08** Thanks for the [report](https://github.com/chuwt/chia-bls-go/issues/7) from [**goomario**](https://github.com/goomario),
 a bug was fixed!
   - This bug was caused by the wrong use of `big.Int.Bytes()`, it should be replaced with `big.Int.FillBytes()`
 
